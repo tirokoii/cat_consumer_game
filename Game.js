@@ -5,7 +5,11 @@ export default class Game {
     constructor(width, height) {
         this.width = width
         this.height = height
-
+        this.rowAmount = 10
+        this.columnAmount = 10
+        this.rowHeight = height / this.rowAmount
+        this.columnWidth = width / this.columnAmount
+        this.boardPositions = []
         this.inputHandler = new InputHandler(this)
 
         this.player = new Player(this, 50, 50, 50, 50, 'green')
@@ -14,6 +18,14 @@ export default class Game {
         this.gameObjects = [
             // Later
         ]
+    }
+
+    initlize() {
+        for (let i = 0; i <= this.rowAmount; i++) {
+            for (let j = 0; j <= this.columnAmount; j++) {
+                this.boardPositions.push([this.rowHeight * i, this.columnWidth * j])
+            }
+        }
     }
 
     update(deltaTime) {
@@ -32,7 +44,7 @@ export default class Game {
         this.gameObjects.forEach(obj => {
             if (obj !== this.player && this.player.intersects(obj)) {
                 // Handling collision
-                
+
                 // if (this.player.directionX > 0) { // Right
                 //     this.player.x = obj.x - this.player.width
                 // } else if (this.player.directionX < 0) {  // Left
@@ -48,6 +60,16 @@ export default class Game {
     }
 
     draw(ctx) {
+        for (let i = 0; i <= this.rowAmount; i++) {
+            ctx.fillStyle = "black"
+            ctx.fillRect(this.columnWidth * i, 0, 5, this.height)
+        }
+
+        for (let j = 0; j <= this.columnAmount; j++) {
+            ctx.fillStyle = "red"
+            ctx.fillRect(0, this.rowHeight * j, this.width, 5)
+        }
+
         this.gameObjects.forEach(obj => obj.draw(ctx))
         this.player.draw(ctx)
     }

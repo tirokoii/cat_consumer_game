@@ -2,14 +2,16 @@ import './style.css'
 import Game from './Game.js'
 
 const setupGame = (canvas) => {
-    canvas.width = 800
-    canvas.height = 800
+    canvas.width = 700
+    canvas.height = 700
 
     const ctx = canvas.getContext('2d')
 
     const game = new Game(canvas.width, canvas.height)
+    game.initlize()
     let lastTime = 0
     let gameLoop
+
 
     const runGame = (timeStamp) => {
         const deltaTime = timeStamp - lastTime
