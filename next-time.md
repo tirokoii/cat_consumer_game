@@ -1,0 +1,1 @@
+Now I know that the browser works and that vite is responfing correctly, I have tested this by pasting the previous code for the player from the game-game-game project to make it possible to tell. I have also copy and pasted the code for gameObject, game and main to spare myself the hassel of writing it myself.
