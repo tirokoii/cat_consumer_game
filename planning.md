@@ -41,6 +41,8 @@ NOPE!
 
 The game should handle if player goes outside of the screen and "respawn" it on the other side.
 
+The game should also handle placing out the items and keeping track of how many there are, + spawn new ones. I somehow need to make it so that items cannot spawn outside or right on the egde of the screenbounds. Maybe just making the value I put into randSpawner (-) minus the items width and height, then it can work?
+
 ## Player
 
 I need to make it so that the player moves one "tile" on the board per input, I also need to make it so that the player can only move in one direction per tile, they shouldn't be able to go vertically. I think what I have to do is just not change the velocity since the cat snake is never supposed to stop moving, and I just change the x and y direction depending on the input.

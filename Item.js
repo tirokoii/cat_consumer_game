@@ -4,6 +4,7 @@ export default class Item extends GameObject {
     constructor(game, x, y, width, height, color) {
         super(game, x, y, width, height)
         this.color = color
+        this.markedForDeletion = false
 
         this.SPEED = 0 // For later if I want to make items move for more fun game-play
     }

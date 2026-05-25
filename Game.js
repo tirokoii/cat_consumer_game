@@ -15,15 +15,13 @@ export default class Game {
 
         this.player = new Player(this, 50, 50, 50, 50, 'green')
 
-        // Skapa alla objekt i spelet
-        this.item = [
-            new Item(this, this.randomizer(width))
-        ]
+        // Create items
+        this.items = []
     }
 
-    randomizer(value) {
+    randSpawner(value, itemWidth) {
         if (value > 0) {
-            Math.floor(Math.random() * (value))
+            return Math.floor(Math.random() * (value))
         }
     }
 
@@ -36,16 +34,22 @@ export default class Game {
     }
 
     update(deltaTime) {
+        if (this.items.length < 4) {
+            for (let i = 0; i < 4; i++) {
+                this.items.push(new Item(this, this.randSpawner(this.width - 20), this.randSpawner(this.height  - 20), 20, 20, "blue"))
+            }
+        } 
+
         // Update (deltatime)
-        this.item.forEach(obj => obj.update(deltaTime))
+        this.items.forEach(obj => obj.update(deltaTime))
         this.player.update(deltaTime)
 
         // Input handling
         if (this.inputHandler.keys.has('r')) {
-            this.item[0].vx += 0.001 * deltaTime
+            this.items[0].vx += 0.001 * deltaTime
         }
         if (this.inputHandler.keys.has('b')) {
-            this.item[1].vy -= 0.001 * deltaTime
+            this.items[1].vy -= 0.001 * deltaTime
         }
         
         if (this.player.directionX > 0 && this.player.x > this.width && this.playery > this.height) {
@@ -80,7 +84,7 @@ export default class Game {
             }
         }
 
-        this.item.forEach(obj => {
+        this.items.forEach(obj => {
             if (obj !== this.player && this.player.intersects(obj)) {
                 // Handling collision
                 // if (this.player.directionX > 0) { // Right
@@ -108,7 +112,7 @@ export default class Game {
             ctx.fillRect(0, this.rowHeight * j, this.width, 5)
         }
 
-        this.item.forEach(obj => obj.draw(ctx))
+        this.items.forEach(obj => obj.draw(ctx))
         this.player.draw(ctx)
     }
 }
