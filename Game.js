@@ -41,25 +41,39 @@ export default class Game {
             this.gameObjects[1].vy -= 0.001 * deltaTime
         }
         
-        // Right
-        if (this.player.directionX > 0 && this.player.x > this.width) {
-            this.player.x  = -this.player.width
+
+        if (this.player.directionX > 0 && this.player.x > this.width && this.playery > this.height) {
+            this.player.x = -this.player.width
+            this.player.y = this.width
             this.player.directionX = -1
-        // Left
-        } else if (this.player.directionX < 0 && this.player.x + this.player.width < 0) {
-            this.player.x = this.width 
-            this.player.directionX = 1
-        } else if (this.player.x > this.width)
-        
-        //Down
-        if (this.player.directionY > 0 && this.player.y > this.height) {
-            this.player.y = -this.player.height
             this.player.directionY = -1
-        // Up
-        } else if (this.player.directionY < 0 && this.player.y + this.player.height < 0) {
+        } else if (this.player.directionX < 0 && this.player.x + this.player.width < 0 && this.player.y + this.player.height < 0) {
+            this.player.x = this.width
             this.player.y = this.height
+            this.player.directionX = 1
             this.player.directionY = 1
+        } else {
+            // Right
+            if (this.player.directionX > 0 && this.player.x > this.width) {
+                this.player.x  = -this.player.width
+                this.player.directionX = -1
+            // Left
+            } else if (this.player.directionX < 0 && this.player.x + this.player.width < 0) {
+                this.player.x = this.width 
+                this.player.directionX = 1
+            }
+            
+            //Down
+            if (this.player.directionY > 0 && this.player.y > this.height) {
+                this.player.y = -this.player.height
+                this.player.directionY = -1
+            // Up
+            } else if (this.player.directionY < 0 && this.player.y + this.player.height < 0) {
+                this.player.y = this.height
+                this.player.directionY = 1
+            }
         }
+
 
         this.gameObjects.forEach(obj => {
             if (obj !== this.player && this.player.intersects(obj)) {
