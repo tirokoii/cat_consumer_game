@@ -8,9 +8,11 @@ Basically snake but with cat
 I need a x position, y position
 A function to move in x and y depending on the input of keys
 
-I need something to handel the inputs
+I need something to handel the inputs.
 
 I need a class for game, input handler, basic gameObject that all following classes can follow: player, item I also need another class called PlayerPart for the extentions of the player.
+
+I need something that can keep track of time elapsed and a menu that you can interact with, could probably use game-game-game code as base for both things. Time elapsed should probably be in the game class.
 
 I think depending on if you want to or not, you can have a main class that handles drawing out all of the frames, and keeping track of which frame your at.
 
@@ -67,10 +69,12 @@ But what are the basics I need:
 
 ## items
 
-I want the player to eat/pick up items to grow longer to do that I want to be able to spawn items and generate them randomly.
-So what I need is:
+I want the player to eat/pick up items to grow longer to do that I want to be able to spawn items and generate them randomly within the "game field".
+For the item I need them to be able to spawn randomly and delete them. (maybe I should make the game handle that?)
 
-- spawnpoint
+So what variables I need:
+
+- spawnpoint (which is randmoized)
 - color
 - SPEED
 

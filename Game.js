@@ -1,4 +1,5 @@
 import Player from './Player.js'
+import Item from './Item.js'
 import InputHandler from './InputHandler.js'
 
 export default class Game {
@@ -15,9 +16,15 @@ export default class Game {
         this.player = new Player(this, 50, 50, 50, 50, 'green')
 
         // Skapa alla objekt i spelet
-        this.gameObjects = [
-            // Later
+        this.item = [
+            new Item(this, this.randomizer(width))
         ]
+    }
+
+    randomizer(value) {
+        if (value > 0) {
+            Math.floor(Math.random() * (value))
+        }
     }
 
     initlize() {
@@ -30,18 +37,17 @@ export default class Game {
 
     update(deltaTime) {
         // Update (deltatime)
-        this.gameObjects.forEach(obj => obj.update(deltaTime))
+        this.item.forEach(obj => obj.update(deltaTime))
         this.player.update(deltaTime)
 
         // Input handling
         if (this.inputHandler.keys.has('r')) {
-            this.gameObjects[0].vx += 0.001 * deltaTime
+            this.item[0].vx += 0.001 * deltaTime
         }
         if (this.inputHandler.keys.has('b')) {
-            this.gameObjects[1].vy -= 0.001 * deltaTime
+            this.item[1].vy -= 0.001 * deltaTime
         }
         
-
         if (this.player.directionX > 0 && this.player.x > this.width && this.playery > this.height) {
             this.player.x = -this.player.width
             this.player.y = this.width
@@ -74,8 +80,7 @@ export default class Game {
             }
         }
 
-
-        this.gameObjects.forEach(obj => {
+        this.item.forEach(obj => {
             if (obj !== this.player && this.player.intersects(obj)) {
                 // Handling collision
                 // if (this.player.directionX > 0) { // Right
@@ -103,7 +108,7 @@ export default class Game {
             ctx.fillRect(0, this.rowHeight * j, this.width, 5)
         }
 
-        this.gameObjects.forEach(obj => obj.draw(ctx))
+        this.item.forEach(obj => obj.draw(ctx))
         this.player.draw(ctx)
     }
 }
