@@ -35,6 +35,9 @@ Like this:
 | | | | 
 | | | | 
 | | | | 
+NOPE!
+
+The game should handle if player goes outside of the screen and "respawn" it on the other side.
 
 ## Player
 
@@ -61,6 +64,15 @@ But what are the basics I need:
 - directionX
 - directionY
 - catLength
+
+## items
+
+I want the player to eat/pick up items to grow longer to do that I want to be able to spawn items and generate them randomly.
+So what I need is:
+
+- spawnpoint
+- color
+- SPEED
 
 # Other useful things
 ## Main

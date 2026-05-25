@@ -6,11 +6,11 @@ export default class Player extends GameObject {
         this.color = color
         this.catLength = []
         this.width = game.columnWidth
-        this.height = game.rowHeight
+        this.height = game.columnWidth
         this.x = 0
         this.y = 0
         
-        this.SPEED = 0.1
+        this.SPEED = 0.2
 
         this.directionX = 0
         this.directionY = 0
@@ -49,7 +49,6 @@ export default class Player extends GameObject {
     }
 
     draw(ctx) {
-        // Rita spelaren som en rektangel
         ctx.fillStyle = this.color
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
