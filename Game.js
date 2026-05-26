@@ -1,4 +1,5 @@
 import Player from './Player.js'
+import PlayerPart from './PlayerPart.js'
 import Item from './Item.js'
 import InputHandler from './InputHandler.js'
 
@@ -33,16 +34,55 @@ export default class Game {
         }
     }
 
+    wallCollisionHandler(playerObj) {
+        if (playerObj == PlayerPart) {
+            console.log(playerObj)
+        }
+        // Collision with walls handler
+        if (playerObj.directionX > 0 && playerObj.x > this.width && playerObj > this.height) {
+            playerObj.x = -this.player.width
+            playerObj.y = this.width
+            playerObj.directionX = -1
+            playerObj.directionY = -1
+        } else if (playerObj.directionX < 0 && playerObj.x + playerObj.width < 0 && playerObj.y + playerObj.height < 0) {
+            playerObj.x = this.width
+            playerObj.y = this.height
+            playerObj.directionX = 1
+            playerObj.directionY = 1
+        } else {
+            // Right
+            if (playerObj.directionX > 0 && playerObj.x > this.width) {
+                playerObj.x  = -playerObj.width
+                playerObj.directionX = -1
+            // Left
+            } else if (playerObj.directionX < 0 && playerObj.x + playerObj.width < 0) {
+                playerObj.x = this.width 
+                playerObj.directionX = 1
+            }
+            
+            //Down
+            if (playerObj.directionY > 0 && playerObj.y > this.height) {
+                playerObj.y = -playerObj.height
+                playerObj.directionY = -1
+            // Up
+            } else if (playerObj.directionY < 0 && playerObj.y + playerObj.height < 0) {
+                playerObj.y = this.height
+                playerObj.directionY = 1
+            }
+        }
+    }
+
     update(deltaTime) {
         if (this.items.length < 4) {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < this.randSpawner(4); i++) {
                 this.items.push(new Item(this, this.randSpawner(this.width - 20), this.randSpawner(this.height  - 20), 20, 20, "blue"))
             }
         } 
 
         // Update (deltatime)
-        this.items.forEach(obj => obj.update(deltaTime))
+        this.items.forEach(item => item.update(deltaTime))
         this.player.update(deltaTime)
+        this.player.catParts.forEach(part => part.update(deltaTime))
 
         // Input handling
         if (this.inputHandler.keys.has('r')) {
@@ -51,54 +91,28 @@ export default class Game {
         if (this.inputHandler.keys.has('b')) {
             this.items[1].vy -= 0.001 * deltaTime
         }
-        
-        if (this.player.directionX > 0 && this.player.x > this.width && this.playery > this.height) {
-            this.player.x = -this.player.width
-            this.player.y = this.width
-            this.player.directionX = -1
-            this.player.directionY = -1
-        } else if (this.player.directionX < 0 && this.player.x + this.player.width < 0 && this.player.y + this.player.height < 0) {
-            this.player.x = this.width
-            this.player.y = this.height
-            this.player.directionX = 1
-            this.player.directionY = 1
-        } else {
-            // Right
-            if (this.player.directionX > 0 && this.player.x > this.width) {
-                this.player.x  = -this.player.width
-                this.player.directionX = -1
-            // Left
-            } else if (this.player.directionX < 0 && this.player.x + this.player.width < 0) {
-                this.player.x = this.width 
-                this.player.directionX = 1
-            }
-            
-            //Down
-            if (this.player.directionY > 0 && this.player.y > this.height) {
-                this.player.y = -this.player.height
-                this.player.directionY = -1
-            // Up
-            } else if (this.player.directionY < 0 && this.player.y + this.player.height < 0) {
-                this.player.y = this.height
-                this.player.directionY = 1
-            }
-        }
 
-        this.items.forEach(obj => {
-            if (obj !== this.player && this.player.intersects(obj)) {
-                // Handling collision
-                // if (this.player.directionX > 0) { // Right
-                //     this.player.x = obj.x - this.player.width
-                // } else if (this.player.directionX < 0) {  // Left
-                //     this.player.x = obj.x + obj.width
-                // }
-                // if (this.player.directionY > 0) { // Down
-                //     this.player.y = obj.y - this.player.height
-                // } else if (this.player.directionY < 0) { // Up
-                //     this.player.y = obj.y + obj.height
-                // }
+        this.wallCollisionHandler(this.player)
+        this.player.catParts.forEach(part => this.wallCollisionHandler(part))
+
+        this.items.forEach(item => {
+            if (this.player.intersects(item) && !item.markedForDeletion) {
+                item.markedForDeletion = true
+                this.player.catLength +++ 1
+                this.player.catParts.push(new PlayerPart(this.game,
+                            this.player.x - this.player.width * this.player.directionX,
+                            this.player.y - this.player.height * this.player.directionY,
+                            this.player.width, 
+                            this.player.height,
+                            "orange",
+                            this.player.SPEED,
+                            [this.player.directionX, this.player.directionY]
+                ))
             }
         })
+        
+        // Delete item from list
+        this.items = this.items.filter(coin => !coin.markedForDeletion)
     }
 
     draw(ctx) {
@@ -112,7 +126,8 @@ export default class Game {
             ctx.fillRect(0, this.rowHeight * j, this.width, 5)
         }
 
-        this.items.forEach(obj => obj.draw(ctx))
+        this.items.forEach(item => item.draw(ctx))
         this.player.draw(ctx)
+        this.player.catParts.forEach(part => part.draw(ctx))
     }
 }

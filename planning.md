@@ -69,6 +69,20 @@ But what are the basics I need:
 - directionY
 - catLength
 
+## PlayerPart
+
+The player part is the extension of the player, the so called lengths och part. It should have the same color, width and height as the main part of the player, but only be an extentsion. I want the player part to adapt to the piece coming before it by taking on its direction.
+Can I first loop through the catParts so that I can fetch the parent to the child and then according to its index update the piece coming afte it?
+By then adding in a variable parentDirection into the update function i can update it with parent position in mind.
+
+In game I need to tell player that they should add a cat legth.
+So the basics that I can for the moment get is:
+
+- SPEED
+- directionX
+- directionY
+- inheritedDirection
+
 ## items
 
 I want the player to eat/pick up items to grow longer to do that I want to be able to spawn items and generate them randomly within the "game field".

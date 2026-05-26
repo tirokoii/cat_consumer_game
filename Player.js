@@ -1,10 +1,12 @@
 import GameObject from './GameObject.js'
+import PlayerPart from './PlayerPart.js'
 
 export default class Player extends GameObject {
     constructor(game, x, y, width, height, color) {
         super(game, x, y, width, height)
         this.color = color
-        this.catLength = []
+        this.catLength = 0
+        this.catParts = []
         this.width = game.columnWidth
         this.height = game.columnWidth
         this.x = 0
@@ -43,9 +45,9 @@ export default class Player extends GameObject {
         this.x += this.SPEED * this.directionX * deltaTime
         this.y += this.SPEED * this.directionY * deltaTime
 
-        for (let i = 0; i <= this.game.boardPositions.length - 1; i++) {
-            let position = this.game.boardPositions[i]
-        }
+        // for (let i = 0; i <= this.game.boardPositions.length - 1; i++) {
+        //     let position = this.game.boardPositions[i]
+        // }
     }
 
     draw(ctx) {
