@@ -1,6 +1,7 @@
 import Player from './Player.js'
 import PlayerPart from './PlayerPart.js'
 import Item from './Item.js'
+import Position from './Position.js'
 import InputHandler from './InputHandler.js'
 
 export default class Game {
@@ -12,6 +13,10 @@ export default class Game {
         this.rowHeight = height / this.rowAmount
         this.columnWidth = width / this.columnAmount
         this.boardPositions = []
+
+        this.timer = 0
+        this.positions = []
+
         this.inputHandler = new InputHandler(this)
 
         this.player = new Player(this, 50, 50, 50, 50, 'green')
@@ -73,16 +78,45 @@ export default class Game {
     }
 
     update(deltaTime) {
+        this.timer += deltaTime
+        
         if (this.items.length < 4) {
+            new Item()
             for (let i = 0; i < this.randSpawner(4); i++) {
-                this.items.push(new Item(this, this.randSpawner(this.width - 20), this.randSpawner(this.height  - 20), 20, 20, "blue"))
+                this.items.push(new Item(
+                    this, 
+                    this.randSpawner(this.width), 
+                    this.randSpawner(this.height), 
+                    45, 
+                    45, 
+                    "blue"
+                ))
             }
         } 
-
-        // Update (deltatime)
-        this.items.forEach(item => item.update(deltaTime))
+        
+        // Update things (deltatime)
         this.player.update(deltaTime)
-        this.player.catParts.forEach(part => part.update(deltaTime))
+        
+        this.items.forEach(item => item.update(deltaTime))
+        
+        if (this.timer > 110) {
+            this.positions.forEach(position => position.updatePosition())
+            for (let i = 0; i < this.positions.length; i++) {
+                let j = this.positions.length - i - 1
+                this.positions[j].updatePosition(deltaTime)
+            }
+
+            this.timer = 0
+        }
+
+        for (let i = 0; i < this.player.catLength; i++) {
+            let j = this.player.catLength - i - 1
+            if (j == 0) {
+                this.player.catParts[j].update(deltaTime, this.positions[0])
+            } else if (j < this.player.catLength) {
+                this.player.catParts[j].update(deltaTime, this.positions[j - 1])
+            }
+        }
 
         // Input handling
         if (this.inputHandler.keys.has('r')) {
@@ -92,27 +126,64 @@ export default class Game {
             this.items[1].vy -= 0.001 * deltaTime
         }
 
-        this.wallCollisionHandler(this.player)
+        // Collision with wall
         this.player.catParts.forEach(part => this.wallCollisionHandler(part))
+        this.wallCollisionHandler(this.player)
 
+        //Handle item pick up and add cat part
         this.items.forEach(item => {
             if (this.player.intersects(item) && !item.markedForDeletion) {
                 item.markedForDeletion = true
+                this.player.state = "eating"
+                // Add cat parts
                 this.player.catLength +++ 1
-                this.player.catParts.push(new PlayerPart(this.game,
-                            this.player.x - this.player.width * this.player.directionX,
-                            this.player.y - this.player.height * this.player.directionY,
-                            this.player.width, 
-                            this.player.height,
-                            "orange",
-                            this.player.SPEED,
-                            [this.player.directionX, this.player.directionY]
-                ))
+                if (this.player.catLength <= 1) {
+                    this.player.catParts.push(new PlayerPart(
+                        this.game,
+                        this.player.x - this.player.width,
+                        this.player.y - this.player.height,
+                        this.player.width, 
+                        this.player.height,
+                        "orange",
+                        this.player.SPEED,
+                        [this.player.directionX, this.player.directionY]
+                    ))
+
+                    this.positions.push(new Position(
+                        this,
+                        this.player.x, 
+                        this.player.y, 
+                        this.player.directionX, 
+                        this.player.directionY,
+                        this.player
+                    ))
+                } else {
+                    this.player.catParts.push(new PlayerPart(
+                        this.game,
+                        this.player.catParts[this.player.catLength - 2].x,
+                        this.player.catParts[this.player.catLength - 2].y,
+                        this.player.catParts[this.player.catLength - 2].width, 
+                        this.player.catParts[this.player.catLength - 2].height,
+                        "orange",
+                        this.player.SPEED,
+                        [this.player.catParts[this.player.catLength - 2].directionX, this.player.catParts[this.player.catLength - 2].directionY]
+                    ))
+
+                    this.positions.push(new Position(
+                        this,
+                        this.player.catParts[this.player.catLength - 2].x,
+                        this.player.catParts[this.player.catLength - 2].y,
+                        this.player.catParts[this.player.catLength - 2].directionX,
+                        this.player.catParts[this.player.catLength - 2].directionY,
+                        this.player.catParts[this.player.catParts.length - 1]
+                    ))
+                }
+
             }
         })
         
         // Delete item from list
-        this.items = this.items.filter(coin => !coin.markedForDeletion)
+        this.items = this.items.filter(item => !item.markedForDeletion)
     }
 
     draw(ctx) {
@@ -126,8 +197,8 @@ export default class Game {
             ctx.fillRect(0, this.rowHeight * j, this.width, 5)
         }
 
+        this.player.catParts.forEach(part => part.draw(ctx))
         this.items.forEach(item => item.draw(ctx))
         this.player.draw(ctx)
-        this.player.catParts.forEach(part => part.draw(ctx))
     }
 }

@@ -5,10 +5,26 @@ export default class GameObject {
         this.y = y
         this.width = width
         this.height = height
+        this.currentSprite = ""
     }
 
     draw(ctx) {
-        // Add in subclasses
+        const img = new Image()
+        img.src = this.currentSprite
+        if (img) {
+            ctx.drawImage(
+                img,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            )
+            ctx.restore()
+            return true
+        } else {
+            ctx.fillStyle = this.color
+            ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
     }
 
     intersects(other) {
