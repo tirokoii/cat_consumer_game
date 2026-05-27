@@ -87,8 +87,8 @@ export default class Game {
                     this, 
                     this.randomizer(this.width - 20), 
                     this.randomizer(this.height - 20), 
-                    45,
-                    45, 
+                    32,
+                    32, 
                     "blue",
                     0,
                     this.randomizer(360)

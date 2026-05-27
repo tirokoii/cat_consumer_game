@@ -10,8 +10,8 @@ export default class Player extends GameObject {
         this.color = color
         this.catLength = 0
         this.catParts = []
-        this.width = game.columnWidth
-        this.height = game.rowHeight
+        this.width = 64
+        this.height = 64
         this.x = 0
         this.y = 0
         
@@ -25,7 +25,7 @@ export default class Player extends GameObject {
         this.directionX = 0
         this.directionY = 0
         this.lastDirection = [1, 0]
-        this.lastPosition = []
+        // this.lastPosition = []
 
     }
 

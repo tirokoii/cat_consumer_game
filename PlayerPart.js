@@ -25,13 +25,15 @@ export default class PlayerPart extends GameObject {
     }
 
     update(deltaTime, playerObj) {
+        if (playerObj) {
+            this.inheritedDirection = [playerObj.directionX, playerObj.directionY]
+        }
         this.directionX = this.inheritedDirection[0]
         this.directionY = this.inheritedDirection[1]
         this.rotationHandler()
-        console.log(this.inheritedDirection)
 
-        this.x = playerObj.x - 20 * 0
-        this.y = playerObj.y - 20 * 0
+        this.x = playerObj.x
+        this.y = playerObj.y
         
         // if (playerObj) {
         //     this.inheritedDirection = [playerObj.directionX, playerObj.directionY]

@@ -7,6 +7,8 @@ export default class GameObject {
         this.height = height
         this.currentSprite = ""
         this.rotation = 0
+        this.img = new Image()
+        this.lastImg = 0
     }
 
     rotationHandler() {
@@ -30,12 +32,10 @@ export default class GameObject {
     }
 
     draw(ctx) {
-        const img = new Image()
-        img.src = this.currentSprite
-        
-        ctx.fillStyle = this.color
-        ctx.fillRect(this.x, this.y, this.width, this.height)
-        if (img) {
+        this.lastImg = this.img
+        this.img.src = this.currentSprite
+
+        if (this.img) {
             if (this.rotation != 0) {
                 ctx.save()
                 let rad = this.rotation * Math.PI / 180
@@ -43,10 +43,15 @@ export default class GameObject {
                 ctx.rotate(rad)
                 ctx.translate(-this.x - this.width / 2, -this.y -this.width / 2)
             }
-            ctx.fillStyle = "yellow"
-            ctx.fillRect(this.x, this.y, this.width, this.height)
             ctx.drawImage(
-                img,
+                this.lastImg,
+                this.x,
+                this.y,
+                this.width,
+                this.height
+            )
+            ctx.drawImage(
+                this.img,
                 this.x,
                 this.y,
                 this.width,
