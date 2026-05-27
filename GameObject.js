@@ -6,12 +6,45 @@ export default class GameObject {
         this.width = width
         this.height = height
         this.currentSprite = ""
+        this.rotation = 0
+    }
+
+    rotationHandler() {
+        if (this.directionX == 1 && this.directionY == -1) {
+            this.rotation = 225
+        } else if (this.directionX == -1 && this.directionY == 1) {
+            this.rotation = 45
+        } else if (this.directionX == -1 && this.directionY == -1) {
+            this.rotation = 135
+        } else if (this.directionX == 1 && this.directionY == 1) {
+            this.rotation = -45
+        } else if (this.directionX == 1) {
+            this.rotation = 270
+        } else if (this.directionX == -1) {
+            this.rotation = 90
+        } else if (this.directionY == 1) {
+            this.rotation = 0
+        } else if (this.directionY == -1) {
+            this.rotation = 180
+        }
     }
 
     draw(ctx) {
         const img = new Image()
         img.src = this.currentSprite
+        
+        ctx.fillStyle = this.color
+        ctx.fillRect(this.x, this.y, this.width, this.height)
         if (img) {
+            if (this.rotation != 0) {
+                ctx.save()
+                let rad = this.rotation * Math.PI / 180
+                ctx.translate(this.x + this.width / 2, this.y + this.height / 2)
+                ctx.rotate(rad)
+                ctx.translate(-this.x - this.width / 2, -this.y -this.width / 2)
+            }
+            ctx.fillStyle = "yellow"
+            ctx.fillRect(this.x, this.y, this.width, this.height)
             ctx.drawImage(
                 img,
                 this.x,

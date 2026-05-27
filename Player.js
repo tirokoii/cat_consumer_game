@@ -5,8 +5,8 @@ import CatHeadNormal from './images/player-normal.png'
 import CatHeadEating from './images/player-eat.png'
 
 export default class Player extends GameObject {
-    constructor(game, x, y, width, height, color, currentSprite) {
-        super(game, x, y, width, height, currentSprite)
+    constructor(game, x, y, width, height, color, currentSprite, rotation) {
+        super(game, x, y, width, height, rotation)
         this.color = color
         this.catLength = 0
         this.catParts = []
@@ -18,6 +18,7 @@ export default class Player extends GameObject {
         this.timer = 0
         this.state = "normal"
         this.currentSprite = CatHeadNormal
+        this.rotation = 0
 
         this.SPEED = 0.2
 
@@ -29,6 +30,7 @@ export default class Player extends GameObject {
     }
 
     update(deltaTime) {
+        this.rotationHandler()
         if (this.state == "normal") {
             this.currentSprite = CatHeadNormal
         } else if (this.state == "eating") {   

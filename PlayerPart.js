@@ -2,8 +2,8 @@ import GameObject from "./GameObject"
 import CatPart from './images/player-back.png'
 
 export default class PlayerPart extends GameObject {
-    constructor(game, x, y, width, height, color, SPEED, currentSprite, inheritedDirection = []) {
-        super(game, x, y, width, height, currentSprite)
+    constructor(game, x, y, width, height, color, SPEED, rotation, inheritedDirection = []) {
+        super(game, x, y, width, height, rotation)
         this.color = color
         this.width = width
         this.height = height
@@ -13,6 +13,7 @@ export default class PlayerPart extends GameObject {
 
         this.timer = 0
         this.currentSprite = CatPart
+        this.rotation = 0
 
         this.SPEED = SPEED
 
@@ -24,6 +25,14 @@ export default class PlayerPart extends GameObject {
     }
 
     update(deltaTime, playerObj) {
+        this.directionX = this.inheritedDirection[0]
+        this.directionY = this.inheritedDirection[1]
+        this.rotationHandler()
+        console.log(this.inheritedDirection)
+
+        this.x = playerObj.x - 20 * 0
+        this.y = playerObj.y - 20 * 0
+        
         // if (playerObj) {
         //     this.inheritedDirection = [playerObj.directionX, playerObj.directionY]
         // }
@@ -46,10 +55,6 @@ export default class PlayerPart extends GameObject {
 
         // this.directionX = playerObj.directionX
         // this.directionY = playerObj.directionY
-
-        this.x = playerObj.x - 20 * this.directionX
-        this.y = playerObj.y - 20 * this.directionY
-        
         // this.x += this.SPEED * this.directionX * deltaTime
         // this.y += this.SPEED * this.directionY * deltaTime
 

@@ -25,7 +25,7 @@ export default class Game {
         this.items = []
     }
 
-    randSpawner(value, itemWidth) {
+    randomizer(value) {
         if (value > 0) {
             return Math.floor(Math.random() * (value))
         }
@@ -82,14 +82,16 @@ export default class Game {
         
         if (this.items.length < 4) {
             new Item()
-            for (let i = 0; i < this.randSpawner(4); i++) {
+            for (let i = 0; i < this.randomizer(4); i++) {
                 this.items.push(new Item(
                     this, 
-                    this.randSpawner(this.width), 
-                    this.randSpawner(this.height), 
+                    this.randomizer(this.width - 20), 
+                    this.randomizer(this.height - 20), 
+                    45,
                     45, 
-                    45, 
-                    "blue"
+                    "blue",
+                    0,
+                    this.randomizer(360)
                 ))
             }
         } 
@@ -146,7 +148,8 @@ export default class Game {
                         this.player.height,
                         "orange",
                         this.player.SPEED,
-                        [this.player.directionX, this.player.directionY]
+                        0,
+                        [this.player.directionX, this.player.directionY],
                     ))
 
                     this.positions.push(new Position(
@@ -166,6 +169,7 @@ export default class Game {
                         this.player.catParts[this.player.catLength - 2].height,
                         "orange",
                         this.player.SPEED,
+                        0,
                         [this.player.catParts[this.player.catLength - 2].directionX, this.player.catParts[this.player.catLength - 2].directionY]
                     ))
 
@@ -175,7 +179,7 @@ export default class Game {
                         this.player.catParts[this.player.catLength - 2].y,
                         this.player.catParts[this.player.catLength - 2].directionX,
                         this.player.catParts[this.player.catLength - 2].directionY,
-                        this.player.catParts[this.player.catParts.length - 1]
+                        this.player.catParts[this.player.catLength - 2]
                     ))
                 }
 
@@ -197,8 +201,8 @@ export default class Game {
             ctx.fillRect(0, this.rowHeight * j, this.width, 5)
         }
 
-        this.player.catParts.forEach(part => part.draw(ctx))
         this.items.forEach(item => item.draw(ctx))
+        this.player.catParts.forEach(part => part.draw(ctx))
         this.player.draw(ctx)
     }
 }
